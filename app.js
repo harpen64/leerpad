@@ -10,7 +10,9 @@
 
 
   /* ---------- koppeling met Supabase (optioneel, zie config.js) ---------- */
-  const CFG = window.LP_CONFIG || {};
+  const CFG = Object.assign({}, window.LP_CONFIG || {});
+  CFG.supabaseUrl = String(CFG.supabaseUrl || '').trim().replace(/\/+$/, '').replace(/\/(rest|auth)\/v1.*$/i, '').replace(/\/+$/, '');
+  CFG.anonKey = String(CFG.anonKey || '').trim();
   const REMOTE = !!(CFG.supabaseUrl && CFG.anonKey);
   const emptyView = () => (REMOTE ? 'role' : 'setup');
   const niceErr = m => { m = String(m);
