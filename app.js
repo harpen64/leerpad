@@ -24,7 +24,7 @@
     return m; };
   async function sb(path, { method = 'GET', body, token } = {}) {
     let r;
-    try { r = await fetch(CFG.supabaseUrl + path, { method, headers: { apikey: CFG.anonKey, Authorization: 'Bearer ' + (token || CFG.anonKey), 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined }); }
+    try { r = await fetch(CFG.supabaseUrl + path, { method, headers: Object.assign({ apikey: CFG.anonKey, 'Content-Type': 'application/json' }, (token || /^eyJ/.test(CFG.anonKey)) ? { Authorization: 'Bearer ' + (token || CFG.anonKey) } : {}), body: body ? JSON.stringify(body) : undefined }); }
     catch (e) { throw new Error('Geen verbinding. Controleer je internet en probeer het opnieuw.'); }
     const t = await r.text(); let j = null; try { j = t ? JSON.parse(t) : null; } catch (e) { j = t; }
     if (!r.ok) throw new Error(niceErr((j && (j.message || j.msg || j.error_description || j.error)) || r.statusText));
